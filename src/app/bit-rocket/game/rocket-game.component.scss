@@ -1,0 +1,26 @@
+canvas {
+  position: absolute;
+  bottom: 0px;
+}
+
+.message {
+  position: absolute;
+  top: 150px;
+  z-index: 5;
+}
+
+.buttons {
+  position: absolute;
+  z-index: 5;
+  bottom: 10px;
+}
+
+.control-btn {
+  z-index: 1;
+  border: 1px solid white;
+  color: white;
+  background-color: transparent;
+  outline: none !important;
+  cursor: pointer;
+  font-size: 14px;
+}
