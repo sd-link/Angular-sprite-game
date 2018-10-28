@@ -21,11 +21,13 @@
     "@angular/platform-browser-dynamic": "^6.0.3",
     "@angular/router": "^6.0.3",
     "@createjs/easeljs": "^2.0.0-beta.3",
+    "@types/pixi.js": "^4.8.2",
     "core-js": "^2.5.4",
     "createjs-module": "^0.8.3",
     "easel-gl": "^1.0.6",
     "es6-tween": "^5.3.0",
     "latest-createjs": "^1.0.24",
+    "pixi.js": "^4.8.2",
     "zone.js": "^0.8.26"
   },
   "devDependencies": {
