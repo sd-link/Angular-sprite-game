@@ -1,4 +1,5 @@
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, OnDestroy } from '@angular/core';
+import { SlotService } from './../slot.service'
 
 declare var PIXI: any;
 declare var tweenManager: any;
@@ -8,8 +9,10 @@ declare var tweenManager: any;
   templateUrl: './slot-state.component.html',
   styleUrls: ['./slot-state.component.css']
 })
-export class SlotStateComponent implements OnInit {
+export class SlotStateComponent implements OnInit, OnDestroy {
   public app: any;
+
+  subscription: any;
   
   readyAssets: boolean;
   spriteRolling: any;
@@ -22,19 +25,25 @@ export class SlotStateComponent implements OnInit {
   tweenTextCenterIn: any;
   tweenTextCenterOut: any;
   tweenTextCenterChange: any;
-  timerPrimary: any;
-  timerSecondary: any;
+  timer: any[];
   backgroundAlphaStep: number;
   typeAnimation: number; 
   score: number;
   
   dicesNameArray = ['bear', 'bitcoin', 'penguin', 'mountain', 'dice1', 'dice2', 'dice3', 'dice4', 'dice5', 'dice6'];
-  fallingDices: number = 5;
+  fallingDices: number = 4;
 
   @ViewChild('wrapper') wrapper: ElementRef;
 
-  constructor() { }
-
+  constructor(public slotService: SlotService) {
+    this.subscription = this.slotService.gameStatusChanged.subscribe(status => this.gameStatusChange(status));
+  }
+  ngOnDestroy() {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+      this.subscription = null;
+    }
+  }
 
   ngOnInit() {
     this.app = new PIXI.Application({
@@ -46,6 +55,7 @@ export class SlotStateComponent implements OnInit {
     });
     this.wrapper.nativeElement.appendChild(this.app.view);
     this.readyAssets = false;
+    this.timer = [];
 
     PIXI.loader
       .add('assets/slots/sprites/dice-flow-sheet.json')
@@ -82,8 +92,10 @@ export class SlotStateComponent implements OnInit {
         }
         for (let i = 0; i < this.fallingDices; i++) {
           this.spriteDices[i] = new PIXI.extras.AnimatedSprite(frameDices);
+          this.spriteDices[i].y = -320;
+          this.spriteDices[i].anchor.set(0.5);
           this.tweenSpriteDices[i] = PIXI.tweenManager.createTween(this.spriteDices[i]);
-          this.tweenSpriteDices[i].
+          this.tweenSpriteDices[i].time = 100;
           this.app.stage.addChild(this.spriteDices[i]);
         }
 
@@ -156,70 +168,122 @@ export class SlotStateComponent implements OnInit {
     this.spriteRolling.alpha = 1.0;
     this.tweenTextCenterIn.start();
     
-    this.timerPrimary = setTimeout(() => {
+    this.timer[0] = setTimeout(() => {
       this.tweenTextCenterOut.start();
-      this.timerPrimary = null;
+      this.timer[0] = null;
     }, 1100);
   }
 
-  multiplierAnimation(xV) {
+  multiplierAnimation() {
+    const { multiplier, winItem } = this.slotService;
     this.initializeTimer();
     this.typeAnimation = 1;
     this.textCenter.style.fontSize = 70;
-    this.textCenter.text = `X${xV < 10 ? '0' + xV : xV}`;
+    this.textCenter.text = `X${multiplier < 10 ? '0' + multiplier : multiplier}`;
     this.spriteRolling.alpha = 0.0;
     this.tweenTextCenterIn.start();
+
+    const interval = 500;
     
-    this.timerPrimary = setTimeout(() => {
+    let diceIndex = 0;
+    for (let i = 0; i < this.dicesNameArray.length; i ++) {
+      
+      if (this.dicesNameArray[i] === winItem) {
+        
+        diceIndex = i; 
+        break;
+      }
+    }
+
+    for (let i = 0; i < this.fallingDices; i ++) {
+      this.spriteDices[i].gotoAndStop(diceIndex);
+      const scale = Math.random() / 3.0 + 0.4;
+      this.spriteDices[i].scale = {x: scale, y: scale};
+      this.spriteDices[i].x = 30 + Math.random() * 260;
+
+      this.timer[i] = setTimeout(() => {
+        this.tweenSpriteDices[i]
+          .from({y: - 30}) 
+          .to({y: 320 + 80})
+          .time = (1 - scale) * 2000;
+        this.tweenSpriteDices[i].start();
+        this.timer[i] = null;
+        
+      }, i * interval);
+
+    }
+
+    this.timer[this.fallingDices] = setTimeout(() => {
       this.tweenTextCenterOut.start();
-      this.timerPrimary = null;
-    }, 1100);
+      this.timer[this.fallingDices] = null;
+    }, this.fallingDices * interval);
+
+    this.timer[this.fallingDices + 1] = setTimeout(() => {
+      this.scoreAnimation();
+      this.timer[this.fallingDices + 1] = null;
+    }, this.fallingDices * interval + 500);
+
   }
 
-  scoreAnimation(bV) {
+  scoreAnimation() {
     this.initializeTimer();
-    this.score = bV;
+    this.score = this.slotService.score;
     this.typeAnimation = 2;
     this.textCenter.style.fontSize = 27;
     this.textCenter.text = `${(0).toFixed(9)} BTC`;
     this.spriteRolling.alpha = 0.0;
     this.tweenTextCenterIn.start();
     
-    
-    this.timerPrimary = setTimeout(() => {
+    this.timer[0] = setTimeout(() => {
       this.tweenTextCenterChange.start();
-      this.timerPrimary = null;
+      this.timer[0] = null;
     }, 600);
 
-    this.timerSecondary = setTimeout(() => {
+    this.timer[1] = setTimeout(() => {
       this.tweenTextCenterOut.start();
-      this.timerSecondary = null;
+      this.timer[1] = null;
     }, 4500);
+
+    this.timer[2] = setTimeout(() => {
+      this.lastWinnigAnimation();
+      this.timer[2] = null;
+    }, 5000);
   }
 
-  lastWinnigAnimation(bV) {
+  lastWinnigAnimation() {
     this.initializeTimer();
     this.typeAnimation = 3;
     this.textCenter.style.fontSize = 27;
-    this.textCenter.text = `Last Winning \n ${bV.toFixed(2)} BTC`;
+    this.textCenter.text = `Last Winning \n ${this.slotService.lastWinning.toFixed(2)} BTC`;
     this.spriteRolling.alpha = 0.0;
     this.tweenTextCenterIn.start();
     
-    this.timerPrimary = setTimeout(() => {
+    this.timer[0] = setTimeout(() => {
       this.tweenTextCenterOut.start();
-      this.timerPrimary = null;
+      this.timer[0] = null;
     }, 1100);
   }
   
   initializeTimer() {
-    if (this.timerPrimary) {
-      clearTimeout(this.timerPrimary);
-      this.timerPrimary = null;
+    for (let i = 0; i < this.timer.length; i ++) {
+      if (this.timer[i]) {
+        clearTimeout(this.timer[i]);
+        this.timer[i] = null;
+      }
     }
-    if (this.timerSecondary) {
-      clearTimeout(this.timerSecondary);
-      this.timerSecondary = null;
+
+  }
+
+  gameStatusChange(status) {
+    if (status === 'play') {
+      this.playAnimation();
+    } else if (status === 'finished') {
+      this.multiplierAnimation();
     }
+  }
+
+  setPlayStatus(status) {
+    this.slotService.setGameStatus(status);
   }
 
 
