@@ -1,7 +1,7 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
-//import * as PIXI from 'pixi.js';
 
-declare var PIXI:any;
+declare var PIXI: any;
+declare var tweenManager: any;
 
 @Component({
   selector: 'app-slot-state',
@@ -15,7 +15,7 @@ export class SlotStateComponent implements OnInit {
   spriteRolling: any;
   imgBackground: any;
   textCenter: any;
-
+  tweenTestCenter: any;
   backgroundAlphaStep: number;
 
   @ViewChild('wrapper') wrapper: ElementRef;
@@ -49,9 +49,14 @@ export class SlotStateComponent implements OnInit {
       }
       this.spriteRolling = new PIXI.extras.AnimatedSprite(frames);
       this.spriteRolling.animationSpeed = 0.5;
-      this.spriteRolling.play();
       this.spriteRolling.x = 0;
       this.spriteRolling.y = 0;
+      this.spriteRolling.loop = false;
+      this.spriteRolling.onComplete = () => {
+        this.spriteRolling.stop();
+        this.spriteRolling.alpha = 0.0;
+      };
+      
       this.app.stage.addChild(this.spriteRolling);
 
       /* background */
@@ -60,7 +65,7 @@ export class SlotStateComponent implements OnInit {
       this.imgBackground.y = 0;
       this.app.stage.addChild(this.imgBackground);
 
-      /* text-play */
+      /* text-center */
       let style = new PIXI.TextStyle({
           fontFamily: 'EnzoOT-Bold',
           fontSize: 70,
@@ -78,15 +83,31 @@ export class SlotStateComponent implements OnInit {
       this.textCenter.x = this.app.screen.width / 2;
       this.textCenter.y = this.app.screen.height / 2;
       this.textCenter.anchor.set(0.5);
-
       this.app.stage.addChild(this.textCenter);
-  ​
-      // Animate the rotation
+
+      /* tween-text-center */
+      this.tweenTestCenter = PIXI.tweenManager.createTween(this.textCenter);
+  ​    this.tweenTestCenter.repeat = 1;
+      this.tweenTestCenter.on('start', () => { console.log('tween started') });
+
+
+      // Animate main things
       this.app.ticker.add(() => {
+        PIXI.tweenManager.update();
         this.backgroundAlphaStep = (this.imgBackground.alpha + this.backgroundAlphaStep > 1.0 || this.imgBackground.alpha + this.backgroundAlphaStep < 0.6) ? -this.backgroundAlphaStep : this.backgroundAlphaStep;
         this.imgBackground.alpha += this.backgroundAlphaStep;
       });
     });
+  }
+
+  play() {
+    this.spriteRolling.gotoAndPlay(1);
+    this.spriteRolling.alpha = 1.0;
+   
+    this.tweenTestCenter.from({ y: this.app.screen.height / 2 + 100, alpha: 0.0 }).to({ y: this.app.screen.height / 2, alpha: 1.0 })
+    this.tweenTestCenter.time = 1000;
+
+    this.tweenTestCenter.start();
   }
 
 }

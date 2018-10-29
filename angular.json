@@ -26,7 +26,8 @@
               "src/styles.css"
             ],
             "scripts": [
-              "node_modules/pixi.js/dist/pixi.min.js"
+              "node_modules/pixi.js/dist/pixi.min.js",
+              "node_modules/k8w-pixi-tween/bin/pixi-tween.min.js"
             ]
           },
           "configurations": {
