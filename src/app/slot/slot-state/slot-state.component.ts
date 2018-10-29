@@ -13,7 +13,9 @@ export class SlotStateComponent implements OnInit {
   
   readyAssets: boolean;
   spriteRolling: any;
-  spriteDice: any;
+  spriteDices: any[];
+  tweenSpriteDices: any[];
+  
   
   imgBackground: any;
   textCenter: any;
@@ -27,6 +29,7 @@ export class SlotStateComponent implements OnInit {
   score: number;
   
   dicesNameArray = ['bear', 'bitcoin', 'penguin', 'mountain', 'dice1', 'dice2', 'dice3', 'dice4', 'dice5', 'dice6'];
+  fallingDices: number = 5;
 
   @ViewChild('wrapper') wrapper: ElementRef;
 
@@ -71,11 +74,18 @@ export class SlotStateComponent implements OnInit {
 
         /* sprite dice */
         let frameDices = [];
+        this.spriteDices = [];
+        this.tweenSpriteDices = [];
         for (let i = 0; i < this.dicesNameArray.length; i++) {
           const diceName = this.dicesNameArray[i];
           frameDices.push(PIXI.Texture.fromFrame(diceName));
         }
-        this.spriteDice = new PIXI.extras.AnimatedSprite(frameDices);
+        for (let i = 0; i < this.fallingDices; i++) {
+          this.spriteDices[i] = new PIXI.extras.AnimatedSprite(frameDices);
+          this.tweenSpriteDices[i] = PIXI.tweenManager.createTween(this.spriteDices[i]);
+          this.tweenSpriteDices[i].
+          this.app.stage.addChild(this.spriteDices[i]);
+        }
 
         /* background */
         this.imgBackground = new PIXI.Sprite(PIXI.Texture.fromFrame('background'));
@@ -117,7 +127,7 @@ export class SlotStateComponent implements OnInit {
           .to({ y: this.app.screen.height / 2 - 50, alpha: 0.0 })
 
         this.tweenTextCenterChange = PIXI.tweenManager.createTween(this.textCenter);
-        this.tweenTextCenterChange.time = 1000;
+        this.tweenTextCenterChange.time = 3000;
         this.tweenTextCenterChange.on('update', (progress, estimateTime) => { 
           switch(this.typeAnimation) {
             case 2:
@@ -170,7 +180,7 @@ export class SlotStateComponent implements OnInit {
     this.initializeTimer();
     this.score = bV;
     this.typeAnimation = 2;
-    this.textCenter.style.fontSize = 24;
+    this.textCenter.style.fontSize = 27;
     this.textCenter.text = `${(0).toFixed(9)} BTC`;
     this.spriteRolling.alpha = 0.0;
     this.tweenTextCenterIn.start();
@@ -184,13 +194,13 @@ export class SlotStateComponent implements OnInit {
     this.timerSecondary = setTimeout(() => {
       this.tweenTextCenterOut.start();
       this.timerSecondary = null;
-    }, 2000);
+    }, 4500);
   }
 
   lastWinnigAnimation(bV) {
     this.initializeTimer();
     this.typeAnimation = 3;
-    this.textCenter.style.fontSize = 24;
+    this.textCenter.style.fontSize = 27;
     this.textCenter.text = `Last Winning \n ${bV.toFixed(2)} BTC`;
     this.spriteRolling.alpha = 0.0;
     this.tweenTextCenterIn.start();
