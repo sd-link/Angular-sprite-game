@@ -15,7 +15,10 @@ export class SlotStateComponent implements OnInit {
   spriteRolling: any;
   imgBackground: any;
   textCenter: any;
-  tweenTestCenter: any;
+  tweenTextCenterIn: any;
+  tweenTextCenterOut: any;
+  tweenTextCenterChange: any;
+  timerPrimary: any;
   backgroundAlphaStep: number;
 
   @ViewChild('wrapper') wrapper: ElementRef;
@@ -84,12 +87,23 @@ export class SlotStateComponent implements OnInit {
       this.textCenter.y = this.app.screen.height / 2;
       this.textCenter.anchor.set(0.5);
       this.app.stage.addChild(this.textCenter);
+      this.textCenter.alpha = 0.0;
 
       /* tween-text-center */
-      this.tweenTestCenter = PIXI.tweenManager.createTween(this.textCenter);
-  ​    this.tweenTestCenter.repeat = 1;
-      this.tweenTestCenter.on('start', () => { console.log('tween started') });
+      this.tweenTextCenterIn = PIXI.tweenManager.createTween(this.textCenter);
+      this.tweenTextCenterIn.time = 400;
+      this.tweenTextCenterIn
+        .from({ y: this.app.screen.height / 2 + 50, alpha: 0.0 })
+        .to({ y: this.app.screen.height / 2, alpha: 1.0 })
+      
+      this.tweenTextCenterOut = PIXI.tweenManager.createTween(this.textCenter);
+      this.tweenTextCenterOut.time = 400;
+      this.tweenTextCenterOut
+        .from({ y: this.app.screen.height / 2, alpha: 1.0 })
+        .to({ y: this.app.screen.height / 2 - 50, alpha: 0.0 })
 
+      this.tweenTextCenterChange = PIXI.tweenManager.createTween(this.textCenter);
+      this.tweenTextCenterChange.time = 1000;
 
       // Animate main things
       this.app.ticker.add(() => {
@@ -100,14 +114,57 @@ export class SlotStateComponent implements OnInit {
     });
   }
 
-  play() {
+  playAnimation() {
+    this.textCenter.style.fontSize = 70;
+    this.textCenter.text = 'PLAY!'
     this.spriteRolling.gotoAndPlay(1);
     this.spriteRolling.alpha = 1.0;
-   
-    this.tweenTestCenter.from({ y: this.app.screen.height / 2 + 100, alpha: 0.0 }).to({ y: this.app.screen.height / 2, alpha: 1.0 })
-    this.tweenTestCenter.time = 1000;
-
-    this.tweenTestCenter.start();
+    this.tweenTextCenterIn.start();
+    if (this.timerPrimary) {
+      clearTimeout(this.timerPrimary);
+    }
+    this.timerPrimary = setTimeout(() => {
+      this.tweenTextCenterOut.start();
+      this.timerPrimary = null;
+    }, 1100);
   }
+
+  multiplierAnimation(xV) {
+    this.textCenter.style.fontSize = 70;
+    this.textCenter.text = `X${xV < 10 ? '0' + xV : xV}`;
+    this.spriteRolling.alpha = 0.0;
+    this.tweenTextCenterIn.start();
+    if (this.timerPrimary) {
+      clearTimeout(this.timerPrimary);
+    }
+    this.timerPrimary = setTimeout(() => {
+      this.tweenTextCenterOut.start();
+      this.timerPrimary = null;
+    }, 1100);
+  }
+
+  scoreAnimation(xV) {
+    
+    const v1 = (1).toFixed(9);
+    const v2 = xV.toFixed(9);    
+    this.textCenter.style.fontSize = 24;
+    this.textCenter.text = `${v1} BTC`;
+    this.spriteRolling.alpha = 0.0;
+    this.tweenTextCenterIn.start();
+    if (this.timerPrimary) {
+      clearTimeout(this.timerPrimary);
+    }
+    this.timerPrimary = setTimeout(() => {
+
+
+      this.tweenTextCenterChange
+        .from ({text:v1, alpha: 1.0})
+        .to ({text:v2, alpha: 1.0})
+      this.tweenTextCenterChange.start();
+      this.timerPrimary = null;
+      
+    }, 600);
+  }
+
 
 }
