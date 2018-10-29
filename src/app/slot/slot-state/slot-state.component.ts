@@ -19,8 +19,10 @@ export class SlotStateComponent implements OnInit {
   tweenTextCenterOut: any;
   tweenTextCenterChange: any;
   timerPrimary: any;
+  timerSecondary: any;
   backgroundAlphaStep: number;
-
+  typeAnimation: number; 
+  score: number;
   @ViewChild('wrapper') wrapper: ElementRef;
 
   constructor() { }
@@ -78,8 +80,7 @@ export class SlotStateComponent implements OnInit {
           dropShadowColor: '#ffffff',
           dropShadowBlur: 10,
           dropShadowAngle: 0,
-          dropShadowDistance: 0,
-          wordWrap: true,
+          dropShadowDistance: 0
       });
 
       this.textCenter = new PIXI.Text('PLAY!', style);
@@ -104,25 +105,34 @@ export class SlotStateComponent implements OnInit {
 
       this.tweenTextCenterChange = PIXI.tweenManager.createTween(this.textCenter);
       this.tweenTextCenterChange.time = 1000;
+      this.tweenTextCenterChange.on('update', (progress, estimateTime) => { 
+        switch(this.typeAnimation) {
+          case 2:
+            const txt = `${(this.score * progress).toFixed(9)} BTC`;
+            this.textCenter.text = txt;
+            break;
+          default:
+        }
+      });
 
       // Animate main things
       this.app.ticker.add(() => {
         PIXI.tweenManager.update();
-        this.backgroundAlphaStep = (this.imgBackground.alpha + this.backgroundAlphaStep > 1.0 || this.imgBackground.alpha + this.backgroundAlphaStep < 0.6) ? -this.backgroundAlphaStep : this.backgroundAlphaStep;
+        this.backgroundAlphaStep = (this.imgBackground.alpha + this.backgroundAlphaStep > 1.0 || this.imgBackground.alpha + this.backgroundAlphaStep < 0.55) ? -this.backgroundAlphaStep : this.backgroundAlphaStep;
         this.imgBackground.alpha += this.backgroundAlphaStep;
       });
     });
   }
 
   playAnimation() {
+    this.initializeTimer();
+    this.typeAnimation = 0;
     this.textCenter.style.fontSize = 70;
     this.textCenter.text = 'PLAY!'
     this.spriteRolling.gotoAndPlay(1);
     this.spriteRolling.alpha = 1.0;
     this.tweenTextCenterIn.start();
-    if (this.timerPrimary) {
-      clearTimeout(this.timerPrimary);
-    }
+    
     this.timerPrimary = setTimeout(() => {
       this.tweenTextCenterOut.start();
       this.timerPrimary = null;
@@ -130,40 +140,63 @@ export class SlotStateComponent implements OnInit {
   }
 
   multiplierAnimation(xV) {
+    this.initializeTimer();
+    this.typeAnimation = 1;
     this.textCenter.style.fontSize = 70;
     this.textCenter.text = `X${xV < 10 ? '0' + xV : xV}`;
     this.spriteRolling.alpha = 0.0;
     this.tweenTextCenterIn.start();
-    if (this.timerPrimary) {
-      clearTimeout(this.timerPrimary);
-    }
+    
     this.timerPrimary = setTimeout(() => {
       this.tweenTextCenterOut.start();
       this.timerPrimary = null;
     }, 1100);
   }
 
-  scoreAnimation(xV) {
-    
-    const v1 = (1).toFixed(9);
-    const v2 = xV.toFixed(9);    
+  scoreAnimation(bV) {
+    this.initializeTimer();
+    this.score = bV;
+    this.typeAnimation = 2;
     this.textCenter.style.fontSize = 24;
-    this.textCenter.text = `${v1} BTC`;
+    this.textCenter.text = `${(0).toFixed(9)} BTC`;
     this.spriteRolling.alpha = 0.0;
     this.tweenTextCenterIn.start();
-    if (this.timerPrimary) {
-      clearTimeout(this.timerPrimary);
-    }
+    
+    
     this.timerPrimary = setTimeout(() => {
-
-
-      this.tweenTextCenterChange
-        .from ({text:v1, alpha: 1.0})
-        .to ({text:v2, alpha: 1.0})
       this.tweenTextCenterChange.start();
       this.timerPrimary = null;
-      
     }, 600);
+
+    this.timerSecondary = setTimeout(() => {
+      this.tweenTextCenterOut.start();
+      this.timerSecondary = null;
+    }, 2000);
+  }
+
+  lastWinnigAnimation(bV) {
+    this.initializeTimer();
+    this.typeAnimation = 3;
+    this.textCenter.style.fontSize = 24;
+    this.textCenter.text = `Last Winning \n ${bV.toFixed(2)} BTC`;
+    this.spriteRolling.alpha = 0.0;
+    this.tweenTextCenterIn.start();
+    
+    this.timerPrimary = setTimeout(() => {
+      this.tweenTextCenterOut.start();
+      this.timerPrimary = null;
+    }, 1100);
+  }
+
+  initializeTimer() {
+    if (this.timerPrimary) {
+      clearTimeout(this.timerPrimary);
+      this.timerPrimary = null;
+    }
+    if (this.timerSecondary) {
+      clearTimeout(this.timerSecondary);
+      this.timerSecondary = null;
+    }
   }
 
 
