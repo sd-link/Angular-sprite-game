@@ -14,6 +14,9 @@ export class SlotStateComponent implements OnInit {
   readyAssets: boolean;
   spriteRolling: any;
   imgBackground: any;
+  textCenter: any;
+
+  backgroundAlphaStep: number;
 
   @ViewChild('wrapper') wrapper: ElementRef;
 
@@ -36,6 +39,7 @@ export class SlotStateComponent implements OnInit {
     .add('background', 'assets/slots/pngs/background.png')
     .load((loader, resources) => {
       this.readyAssets = true;
+      this.backgroundAlphaStep = .01;
 
       /* sprite */
       let frames = [];
@@ -54,15 +58,34 @@ export class SlotStateComponent implements OnInit {
       this.imgBackground = new PIXI.Sprite(resources.background.texture);
       this.imgBackground.x = 0;
       this.imgBackground.y = 0;
-
       this.app.stage.addChild(this.imgBackground);
 
+      /* text-play */
+      let style = new PIXI.TextStyle({
+          fontFamily: 'EnzoOT-Bold',
+          fontSize: 70,
+          fill: '#ffffff',
+          align: 'center',
+          dropShadow: true,
+          dropShadowColor: '#ffffff',
+          dropShadowBlur: 10,
+          dropShadowAngle: 0,
+          dropShadowDistance: 0,
+          wordWrap: true,
+      });
+
+      this.textCenter = new PIXI.Text('PLAY!', style);
+      this.textCenter.x = this.app.screen.width / 2;
+      this.textCenter.y = this.app.screen.height / 2;
+      this.textCenter.anchor.set(0.5);
+
+      this.app.stage.addChild(this.textCenter);
   ​
-      
       // Animate the rotation
-      // this.app.ticker.add(() => {
-      //   this.spriteRolling.rotation += 0.01;
-      // });
+      this.app.ticker.add(() => {
+        this.backgroundAlphaStep = (this.imgBackground.alpha + this.backgroundAlphaStep > 1.0 || this.imgBackground.alpha + this.backgroundAlphaStep < 0.6) ? -this.backgroundAlphaStep : this.backgroundAlphaStep;
+        this.imgBackground.alpha += this.backgroundAlphaStep;
+      });
     });
   }
 

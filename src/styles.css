@@ -4,3 +4,128 @@ body {
   padding: 0;
   margin: 0;
 }
+
+@font-face {
+  font-family: 'Somatic-Rounded';
+  src: url('./assets/fonts/Somatic-Rounded.otf?#iefix') format('opentype');
+}
+
+@font-face {
+  font-family: 'ITCAvantGardeStd-Bold';
+  src: url('./assets/fonts/ITCAvantGardeStd-Bold.otf?#iefix') format('opentype');
+}
+
+@font-face {
+  font-family: 'Roboto-Black';
+  src: url('./assets/fonts/Roboto/Roboto-Black.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Roboto-BlackItalic';
+  src: url('./assets/fonts/Roboto/Roboto-BlackItalic.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Roboto-Bold';
+  src: url('./assets/fonts/Roboto/Roboto-Bold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Roboto-BoldItalic';
+  src: url('./assets/fonts/Roboto/Roboto-BoldItalic.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Roboto-Italic';
+  src: url('./assets/fonts/Roboto/Roboto-Italic.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Roboto-Light';
+  src: url('./assets/fonts/Roboto/Roboto-Light.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Roboto-LightItalic';
+  src: url('./assets/fonts/Roboto/Roboto-LightItalic.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Roboto-Medium';
+  src: url('./assets/fonts/Roboto/Roboto-Medium.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Roboto-MediumItalic';
+  src: url('./assets/fonts/Roboto/Roboto-MediumItalic.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Roboto-Regular';
+  src: url('./assets/fonts/Roboto/Roboto-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Roboto-Thin';
+  src: url('./assets/fonts/Roboto/Roboto-Thin.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Roboto-ThinItalic';
+  src: url('./assets/fonts/Roboto/Roboto-ThinItalic.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'EnzoOT-Bold';
+  src: url('./assets/fonts/EnzoOT/EnzoOT-Bold.otf?#iefix') format('opentype');
+}
+
+@font-face {
+  font-family: 'EnzoOT-BoldItalic';
+  src: url('./assets/fonts/EnzoOT/EnzoOT-BoldIta.otf?#iefix') format('opentype');
+}
+
+@font-face {
+  font-family: 'EnzoOT-Light';
+  src: url('./assets/fonts/EnzoOT/EnzoOT-Light.otf?#iefix') format('opentype');
+}
+
+@font-face {
+  font-family: 'EnzoOT-LightIta';
+  src: url('./assets/fonts/EnzoOT/EnzoOT-LightIta.otf?#iefix') format('opentype');
+}
+
+@font-face {
+  font-family: 'EnzoOT-Medi';
+  src: url('./assets/fonts/EnzoOT/EnzoOT-Medi.otf?#iefix') format('opentype');
+}
+
+@font-face {
+  font-family: 'EnzoOT-MediIta';
+  src: url('./assets/fonts/EnzoOT/EnzoOT-MediIta.otf?#iefix') format('opentype');
+}
+
+@font-face {
+  font-family: 'BebasNeue-Bold';
+  src: url('./assets/fonts/BebasNeue/BebasNeue-Bold.otf?#iefix') format('opentype');
+}
+
+@font-face {
+  font-family: 'BebasNeue-Book';
+  src: url('./assets/fonts/BebasNeue/BebasNeue-Book.otf?#iefix') format('opentype');
+}
+
+@font-face {
+  font-family: 'BebasNeue-Light';
+  src: url('./assets/fonts/BebasNeue/BebasNeue-Light.otf?#iefix') format('opentype');
+}
+
+@font-face {
+  font-family: 'BebasNeue-Regular';
+  src: url('./assets/fonts/BebasNeue/BebasNeue-Regular.otf?#iefix') format('opentype');
+}
+
+@font-face {
+  font-family: 'BebasNeue-Thin';
+  src: url('./assets/fonts/BebasNeue/BebasNeue-Thin.otf?#iefix') format('opentype');
+}
