@@ -1,0 +1,367 @@
+{
+	"frames": {
+		"background": {
+			"frame": {
+				"h": 320,
+				"w": 320,
+				"x": 0,
+				"y": 0
+			},
+			"rotated": false,
+			"spriteSourceSize": {
+				"h": 320,
+				"w": 320,
+				"x": 0,
+				"y": 0
+			},
+			"sourceSize": {
+				"h": 320,
+				"w": 320
+			},
+			"trimmed": false
+		},
+		"bear": {
+			"frame": {
+				"h": 132,
+				"w": 138,
+				"x": 512,
+				"y": 0
+			},
+			"rotated": false,
+			"spriteSourceSize": {
+				"h": 132,
+				"w": 138,
+				"x": 46,
+				"y": 50
+			},
+			"sourceSize": {
+				"h": 230,
+				"w": 230
+			},
+			"trimmed": true
+		},
+		"bitcoin": {
+			"frame": {
+				"h": 135,
+				"w": 136,
+				"x": 194,
+				"y": 471
+			},
+			"rotated": false,
+			"spriteSourceSize": {
+				"h": 135,
+				"w": 136,
+				"x": 47,
+				"y": 47
+			},
+			"sourceSize": {
+				"h": 230,
+				"w": 230
+			},
+			"trimmed": true
+		},
+		"dice1": {
+			"frame": {
+				"h": 102,
+				"w": 134,
+				"x": 536,
+				"y": 622
+			},
+			"rotated": false,
+			"spriteSourceSize": {
+				"h": 102,
+				"w": 134,
+				"x": 48,
+				"y": 64
+			},
+			"sourceSize": {
+				"h": 230,
+				"w": 230
+			},
+			"trimmed": true
+		},
+		"dice2": {
+			"frame": {
+				"h": 102,
+				"w": 134,
+				"x": 402,
+				"y": 622
+			},
+			"rotated": false,
+			"spriteSourceSize": {
+				"h": 102,
+				"w": 134,
+				"x": 48,
+				"y": 64
+			},
+			"sourceSize": {
+				"h": 230,
+				"w": 230
+			},
+			"trimmed": true
+		},
+		"dice3": {
+			"frame": {
+				"h": 102,
+				"w": 134,
+				"x": 268,
+				"y": 622
+			},
+			"rotated": false,
+			"spriteSourceSize": {
+				"h": 102,
+				"w": 134,
+				"x": 48,
+				"y": 64
+			},
+			"sourceSize": {
+				"h": 230,
+				"w": 230
+			},
+			"trimmed": true
+		},
+		"dice4": {
+			"frame": {
+				"h": 102,
+				"w": 134,
+				"x": 134,
+				"y": 622
+			},
+			"rotated": false,
+			"spriteSourceSize": {
+				"h": 102,
+				"w": 134,
+				"x": 48,
+				"y": 64
+			},
+			"sourceSize": {
+				"h": 230,
+				"w": 230
+			},
+			"trimmed": true
+		},
+		"dice5": {
+			"frame": {
+				"h": 102,
+				"w": 134,
+				"x": 0,
+				"y": 622
+			},
+			"rotated": false,
+			"spriteSourceSize": {
+				"h": 102,
+				"w": 134,
+				"x": 48,
+				"y": 64
+			},
+			"sourceSize": {
+				"h": 230,
+				"w": 230
+			},
+			"trimmed": true
+		},
+		"dice6": {
+			"frame": {
+				"h": 102,
+				"w": 134,
+				"x": 520,
+				"y": 472
+			},
+			"rotated": false,
+			"spriteSourceSize": {
+				"h": 102,
+				"w": 134,
+				"x": 48,
+				"y": 64
+			},
+			"sourceSize": {
+				"h": 230,
+				"w": 230
+			},
+			"trimmed": true
+		},
+		"mintdice1": {
+			"frame": {
+				"h": 151,
+				"w": 194,
+				"x": 0,
+				"y": 320
+			},
+			"rotated": false,
+			"spriteSourceSize": {
+				"h": 151,
+				"w": 194,
+				"x": 17,
+				"y": 38
+			},
+			"sourceSize": {
+				"h": 230,
+				"w": 230
+			},
+			"trimmed": true
+		},
+		"mintdice2": {
+			"frame": {
+				"h": 151,
+				"w": 194,
+				"x": 320,
+				"y": 153
+			},
+			"rotated": false,
+			"spriteSourceSize": {
+				"h": 151,
+				"w": 194,
+				"x": 17,
+				"y": 38
+			},
+			"sourceSize": {
+				"h": 230,
+				"w": 230
+			},
+			"trimmed": true
+		},
+		"mintdice3": {
+			"frame": {
+				"h": 151,
+				"w": 194,
+				"x": 194,
+				"y": 320
+			},
+			"rotated": false,
+			"spriteSourceSize": {
+				"h": 151,
+				"w": 194,
+				"x": 17,
+				"y": 38
+			},
+			"sourceSize": {
+				"h": 230,
+				"w": 230
+			},
+			"trimmed": true
+		},
+		"mintdice4": {
+			"frame": {
+				"h": 152,
+				"w": 192,
+				"x": 388,
+				"y": 320
+			},
+			"rotated": false,
+			"spriteSourceSize": {
+				"h": 152,
+				"w": 192,
+				"x": 18,
+				"y": 38
+			},
+			"sourceSize": {
+				"h": 230,
+				"w": 230
+			},
+			"trimmed": true
+		},
+		"mintdice5": {
+			"frame": {
+				"h": 151,
+				"w": 194,
+				"x": 0,
+				"y": 471
+			},
+			"rotated": false,
+			"spriteSourceSize": {
+				"h": 151,
+				"w": 194,
+				"x": 17,
+				"y": 38
+			},
+			"sourceSize": {
+				"h": 230,
+				"w": 230
+			},
+			"trimmed": true
+		},
+		"mintdice6": {
+			"frame": {
+				"h": 153,
+				"w": 192,
+				"x": 320,
+				"y": 0
+			},
+			"rotated": false,
+			"spriteSourceSize": {
+				"h": 153,
+				"w": 192,
+				"x": 18,
+				"y": 38
+			},
+			"sourceSize": {
+				"h": 230,
+				"w": 230
+			},
+			"trimmed": true
+		},
+		"mintleaf": {
+			"frame": {
+				"h": 134,
+				"w": 122,
+				"x": 580,
+				"y": 320
+			},
+			"rotated": false,
+			"spriteSourceSize": {
+				"h": 134,
+				"w": 122,
+				"x": 53,
+				"y": 48
+			},
+			"sourceSize": {
+				"h": 230,
+				"w": 230
+			},
+			"trimmed": true
+		},
+		"mountain": {
+			"frame": {
+				"h": 122,
+				"w": 144,
+				"x": 514,
+				"y": 153
+			},
+			"rotated": false,
+			"spriteSourceSize": {
+				"h": 122,
+				"w": 144,
+				"x": 42,
+				"y": 54
+			},
+			"sourceSize": {
+				"h": 230,
+				"w": 230
+			},
+			"trimmed": true
+		},
+		"penguin": {
+			"frame": {
+				"h": 129,
+				"w": 132,
+				"x": 388,
+				"y": 472
+			},
+			"rotated": false,
+			"spriteSourceSize": {
+				"h": 129,
+				"w": 132,
+				"x": 49,
+				"y": 48
+			},
+			"sourceSize": {
+				"h": 230,
+				"w": 230
+			},
+			"trimmed": true
+		}
+	},
+	"meta": {
+		"image": "dices.png"
+	}
+}
