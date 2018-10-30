@@ -62,8 +62,8 @@ export class SlotStateComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.app = new PIXI.Application({
-      width: 320,         
-      height: 320,        
+      width: 300,         
+      height: 250,        
       antialias: true,    
       transparent: false, 
       resolution: 1       
@@ -87,13 +87,15 @@ export class SlotStateComponent implements OnInit, OnDestroy {
         }
         this.spriteRolling = new PIXI.extras.AnimatedSprite(frames);
         this.spriteRolling.animationSpeed = 0.5;
-        this.spriteRolling.x = 0;
-        this.spriteRolling.y = 0;
+        this.spriteRolling.x = this.app.screen.width / 2;
+        this.spriteRolling.y = this.app.screen.height / 2;
+        this.spriteRolling.anchor.set(0.5);
         this.spriteRolling.loop = false;
         this.spriteRolling.onComplete = () => {
           this.spriteRolling.stop();
           this.spriteRolling.alpha = 0.0;
         };
+
       
         this.app.stage.addChild(this.spriteRolling);
 
