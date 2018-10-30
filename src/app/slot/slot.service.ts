@@ -18,7 +18,7 @@ export class SlotService {
 
   setGameStatus(status) {
     this.gameStatus = status;
-    if (this.gameStatus === GameStatus.Finished) {
+    if (this.gameStatus === GameStatus.Success) {
       this.multiplier = Math.floor(Math.random() * 10);
       const diceIndex = Math.floor(DiceNames.length * Math.random());
       this.winItem = DiceNames[diceIndex];

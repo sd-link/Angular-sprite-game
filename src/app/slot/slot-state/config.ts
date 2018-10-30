@@ -5,20 +5,22 @@ export const FallingDices = 4;
 export enum TextStyle {
   fontFamily = 'EnzoOT-Bold',
   fontSizeLarge = 70,
-  fontSizeSmall = 26
+  fontSizeSmall = 30
 }
 
 export enum AnimationTiming {
   TextIn = 400,
   TextOut = 400,
-  TextDelay = 600,
+  TextDelay = 800,
   TextCounting = 2000,
   DiceFallingInterval = 500,
   DiceFallingDuration = 2000
 }
 
 export enum GameStatus {
-  Finished = 'FINISHED',
+  Success = 'SUCCESS',
+  Fail = 'FAIL',
+  Jackpot = 'JACKPOT',
   Play = 'PLAY'
 }
 

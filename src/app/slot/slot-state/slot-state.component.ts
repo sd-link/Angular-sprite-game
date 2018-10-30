@@ -287,7 +287,7 @@ export class SlotStateComponent implements OnInit, OnDestroy {
   gameStatusChange(status) {
     if (status === GameStatus.Play) {
       this.playAnimation();
-    } else if (status === GameStatus.Finished) {
+    } else if (status === GameStatus.Success) {
       this.multiplierAnimation();
     }
   }
@@ -312,9 +312,15 @@ export class SlotStateComponent implements OnInit, OnDestroy {
     this.slotService.setGameStatus(GameStatus.Play);
   }
 
-  finished() {
-    this.slotService.setGameStatus(GameStatus.Finished);
+  success() {
+    this.slotService.setGameStatus(GameStatus.Success);
   }
 
+  fail() {
+    this.slotService.setGameStatus(GameStatus.Fail);
+  }
 
+  jackpot() {
+    this.slotService.setGameStatus(GameStatus.Jackpot);
+  }
 }
