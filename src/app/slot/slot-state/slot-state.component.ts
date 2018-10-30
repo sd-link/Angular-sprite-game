@@ -89,7 +89,7 @@ export class SlotStateComponent implements OnInit, OnDestroy {
         this.spriteRolling.animationSpeed = 0.5;
         this.spriteRolling.x = 0;
         this.spriteRolling.y = 0;
-        this.spriteRolling.loop = false;
+        this.spriteRolling.loop = true;
         this.spriteRolling.onComplete = () => {
           this.spriteRolling.stop();
           this.spriteRolling.alpha = 0.0;
