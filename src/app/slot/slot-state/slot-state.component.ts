@@ -23,8 +23,10 @@ export class SlotStateComponent implements OnInit, OnDestroy {
   
   imgBackground: any;
   textCenter: any;
-  tweenTextCenterIn: any;
-  tweenTextCenterOut: any;
+  tweenTextCenterSlideIn: any;
+  tweenTextCenterSlideOut: any;
+  tweenTextCenterZoomIn: any;
+  tweenTextCenterZoomOut: any;
   tweenTextCenterChange: any;
   timer: any[];
   backgroundAlphaStep: number;
@@ -47,8 +49,10 @@ export class SlotStateComponent implements OnInit, OnDestroy {
     this.removeGhostFontElement();
     this.initializeTimer();
     this.tweenTextCenterChange = null;
-    this.tweenTextCenterOut = null;
-    this.tweenTextCenterIn = null;
+    this.tweenTextCenterSlideOut = null;
+    this.tweenTextCenterSlideIn = null;
+    this.tweenTextCenterZoomOut = null;
+    this.tweenTextCenterZoomIn = null;
     this.textCenter = null;
     this.imgBackground = null;
     this.spriteRolling = null;
@@ -137,17 +141,29 @@ export class SlotStateComponent implements OnInit, OnDestroy {
         this.textCenter.alpha = 0.0;
 
         /* tween-text-center */
-        this.tweenTextCenterIn = PIXI.tweenManager.createTween(this.textCenter);
-        this.tweenTextCenterIn.time = AnimationTiming.TextIn;
-        this.tweenTextCenterIn
+        this.tweenTextCenterSlideIn = PIXI.tweenManager.createTween(this.textCenter);
+        this.tweenTextCenterSlideIn.time = AnimationTiming.TextIn;
+        this.tweenTextCenterSlideIn
           .from({ y: this.app.screen.height / 2 + 50, alpha: 0.0 })
           .to({ y: this.app.screen.height / 2, alpha: 1.0 })
         
-        this.tweenTextCenterOut = PIXI.tweenManager.createTween(this.textCenter);
-        this.tweenTextCenterOut.time = AnimationTiming.TextOut;
-        this.tweenTextCenterOut
+        this.tweenTextCenterSlideOut = PIXI.tweenManager.createTween(this.textCenter);
+        this.tweenTextCenterSlideOut.time = AnimationTiming.TextOut;
+        this.tweenTextCenterSlideOut
           .from({ y: this.app.screen.height / 2, alpha: 1.0 })
           .to({ y: this.app.screen.height / 2 - 50, alpha: 0.0 })
+
+        this.tweenTextCenterZoomIn = PIXI.tweenManager.createTween(this.textCenter);
+        this.tweenTextCenterZoomIn.time = AnimationTiming.TextIn;
+        this.tweenTextCenterZoomIn
+          .from({ scale: {x: 1.2, y: 1.2}, alpha: 0.0 })
+          .to({ scale: {x: 1, y: 1}, alpha: 1.0 })
+        
+        this.tweenTextCenterZoomOut = PIXI.tweenManager.createTween(this.textCenter);
+        this.tweenTextCenterZoomOut.time = AnimationTiming.TextOut;
+        this.tweenTextCenterZoomOut
+          .from({ scale: {x: 1, y: 1}, alpha: 1.0 })
+          .to({ scale: {x: 0.7, y: 0.7}, alpha: 0.0 })
 
         this.tweenTextCenterChange = PIXI.tweenManager.createTween(this.textCenter);
         this.tweenTextCenterChange.time = AnimationTiming.TextCounting;
@@ -177,10 +193,10 @@ export class SlotStateComponent implements OnInit, OnDestroy {
     this.textCenter.text = 'PLAY!'
     this.spriteRolling.gotoAndPlay(1);
     this.spriteRolling.alpha = 1.0;
-    this.tweenTextCenterIn.start();
+    this.tweenTextCenterSlideIn.start();
     
     this.timer[0] = setTimeout(() => {
-      this.tweenTextCenterOut.start();
+      this.tweenTextCenterSlideOut.start();
       this.timer[0] = null;
     }, AnimationTiming.TextIn + AnimationTiming.TextDelay);
   }
@@ -192,7 +208,7 @@ export class SlotStateComponent implements OnInit, OnDestroy {
     this.textCenter.style.fontSize = TextStyle.fontSizeLarge;
     this.textCenter.text = `X${multiplier < 10 ? '0' + multiplier : multiplier}`;
     this.spriteRolling.alpha = 0.0;
-    this.tweenTextCenterIn.start();
+    this.tweenTextCenterSlideIn.start();
 
     
     let diceIndex = 0;
@@ -224,7 +240,7 @@ export class SlotStateComponent implements OnInit, OnDestroy {
     }
 
     this.timer[FallingDices] = setTimeout(() => {
-      this.tweenTextCenterOut.start();
+      this.tweenTextCenterSlideOut.start();
       this.timer[FallingDices] = null;
     }, FallingDices * AnimationTiming.DiceFallingInterval);
 
@@ -242,7 +258,7 @@ export class SlotStateComponent implements OnInit, OnDestroy {
     this.textCenter.style.fontSize = TextStyle.fontSizeSmall;
     this.textCenter.text = `${(0).toFixed(9)} BTC`;
     this.spriteRolling.alpha = 0.0;
-    this.tweenTextCenterIn.start();
+    this.tweenTextCenterSlideIn.start();
     
     this.timer[0] = setTimeout(() => {
       this.tweenTextCenterChange.start();
@@ -250,7 +266,7 @@ export class SlotStateComponent implements OnInit, OnDestroy {
     }, AnimationTiming.TextIn + AnimationTiming.TextDelay);
 
     this.timer[1] = setTimeout(() => {
-      this.tweenTextCenterOut.start();
+      this.tweenTextCenterSlideOut.start();
       this.timer[1] = null;
     }, AnimationTiming.TextIn + AnimationTiming.TextCounting + AnimationTiming.TextDelay * 2);
 
@@ -266,13 +282,27 @@ export class SlotStateComponent implements OnInit, OnDestroy {
     this.textCenter.style.fontSize = TextStyle.fontSizeSmall;
     this.textCenter.text = `Last Winning \n ${this.slotService.lastWinning.toFixed(2)} BTC`;
     this.spriteRolling.alpha = 0.0;
-    this.tweenTextCenterIn.start();
+    this.tweenTextCenterSlideIn.start();
     
     this.timer[0] = setTimeout(() => {
-      this.tweenTextCenterOut.start();
+      this.tweenTextCenterSlideOut.start();
       this.timer[0] = null;
     }, AnimationTiming.TextIn + AnimationTiming.TextDelay);
   }
+
+  failAnimation() {
+    this.initializeTimer();
+    this.typeAnimation = 0;
+    this.textCenter.style.fontSize = TextStyle.fontSizeMedium;
+    this.textCenter.text = 'Try again!'
+    this.tweenTextCenterZoomIn.start();
+
+    this.timer[0] = setTimeout(() => {
+      this.tweenTextCenterZoomOut.start();
+      this.timer[0] = null;
+    }, AnimationTiming.TextIn + AnimationTiming.TextDelay);
+  }
+
   
   initializeTimer() {
     for (let i = 0; i < this.timer.length; i ++) {
@@ -289,7 +319,9 @@ export class SlotStateComponent implements OnInit, OnDestroy {
       this.playAnimation();
     } else if (status === GameStatus.Success) {
       this.multiplierAnimation();
-    }
+    } else if (status === GameStatus.Fail) {
+      this.failAnimation();
+    } 
   }
 
   addGhostFontElement() {
@@ -318,9 +350,5 @@ export class SlotStateComponent implements OnInit, OnDestroy {
 
   fail() {
     this.slotService.setGameStatus(GameStatus.Fail);
-  }
-
-  jackpot() {
-    this.slotService.setGameStatus(GameStatus.Jackpot);
   }
 }
