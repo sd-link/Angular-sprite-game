@@ -2,6 +2,12 @@ export const DiceNames = ['bear', 'bitcoin', 'penguin', 'mountain', 'dice1', 'di
 
 export const FallingDices = 4;
 
+export enum TextStyle {
+  fontFamily = 'EnzoOT-Bold',
+  fontSizeLarge = 70,
+  fontSizeSmall = 26
+}
+
 export enum AnimationTiming {
   TextIn = 400,
   TextOut = 400,

@@ -27,7 +27,8 @@
             ],
             "scripts": [
               "node_modules/pixi.js/dist/pixi.min.js",
-              "node_modules/k8w-pixi-tween/bin/pixi-tween.min.js"
+              "node_modules/k8w-pixi-tween/bin/pixi-tween.min.js",
+              "src/assets/js/webfontloader.js"
             ]
           },
           "configurations": {

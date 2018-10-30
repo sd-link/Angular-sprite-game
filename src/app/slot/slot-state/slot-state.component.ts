@@ -1,9 +1,9 @@
 import { Component, OnInit, ElementRef, ViewChild, OnDestroy } from '@angular/core';
 import { SlotService } from './../slot.service';
-import { DiceNames, FallingDices, AnimationTiming, GameStatus } from './config';
+import { DiceNames, FallingDices, AnimationTiming, GameStatus, TextStyle } from './config';
 
 declare var PIXI: any;
-declare var tweenManager: any;
+// declare var tweenManager: any;
 
 @Component({
   selector: 'app-slot-state',
@@ -30,10 +30,13 @@ export class SlotStateComponent implements OnInit, OnDestroy {
   backgroundAlphaStep: number;
   typeAnimation: number; 
   score: number;
+
+  ghostElement: any;
   
   @ViewChild('wrapper') wrapper: ElementRef;
 
   constructor(public slotService: SlotService) {
+    this.addGhostFontElement();
     this.subscription = this.slotService.gameStatusChanged.subscribe(status => this.gameStatusChange(status));
   }
   ngOnDestroy() {
@@ -41,6 +44,7 @@ export class SlotStateComponent implements OnInit, OnDestroy {
       this.subscription.unsubscribe();
       this.subscription = null;
     }
+    this.removeGhostFontElement();
   }
 
   ngOnInit() {
@@ -54,7 +58,7 @@ export class SlotStateComponent implements OnInit, OnDestroy {
     this.wrapper.nativeElement.appendChild(this.app.view);
     this.readyAssets = false;
     this.timer = [];
-
+    
     PIXI.loader
       .add('assets/slots/sprites/dice-flow-sheet.json')
       .add('assets/slots/sprites/dices-sheet.json')
@@ -105,8 +109,8 @@ export class SlotStateComponent implements OnInit, OnDestroy {
 
         /* text-center */
         let style = new PIXI.TextStyle({
-            fontFamily: 'EnzoOT-Bold',
-            fontSize: 70,
+            fontFamily: TextStyle.fontFamily,
+            fontSize: TextStyle.fontSizeLarge,
             fill: '#ffffff',
             align: 'center',
             dropShadow: true,
@@ -160,7 +164,7 @@ export class SlotStateComponent implements OnInit, OnDestroy {
   playAnimation() {
     this.initializeTimer();
     this.typeAnimation = 0;
-    this.textCenter.style.fontSize = 70;
+    this.textCenter.style.fontSize = TextStyle.fontSizeLarge;
     this.textCenter.text = 'PLAY!'
     this.spriteRolling.gotoAndPlay(1);
     this.spriteRolling.alpha = 1.0;
@@ -176,7 +180,7 @@ export class SlotStateComponent implements OnInit, OnDestroy {
     const { multiplier, winItem } = this.slotService;
     this.initializeTimer();
     this.typeAnimation = 1;
-    this.textCenter.style.fontSize = 70;
+    this.textCenter.style.fontSize = TextStyle.fontSizeLarge;
     this.textCenter.text = `X${multiplier < 10 ? '0' + multiplier : multiplier}`;
     this.spriteRolling.alpha = 0.0;
     this.tweenTextCenterIn.start();
@@ -226,7 +230,7 @@ export class SlotStateComponent implements OnInit, OnDestroy {
     this.initializeTimer();
     this.score = this.slotService.score;
     this.typeAnimation = 2;
-    this.textCenter.style.fontSize = 27;
+    this.textCenter.style.fontSize = TextStyle.fontSizeSmall;
     this.textCenter.text = `${(0).toFixed(9)} BTC`;
     this.spriteRolling.alpha = 0.0;
     this.tweenTextCenterIn.start();
@@ -250,7 +254,7 @@ export class SlotStateComponent implements OnInit, OnDestroy {
   lastWinnigAnimation() {
     this.initializeTimer();
     this.typeAnimation = 3;
-    this.textCenter.style.fontSize = 27;
+    this.textCenter.style.fontSize = TextStyle.fontSizeSmall;
     this.textCenter.text = `Last Winning \n ${this.slotService.lastWinning.toFixed(2)} BTC`;
     this.spriteRolling.alpha = 0.0;
     this.tweenTextCenterIn.start();
@@ -276,6 +280,22 @@ export class SlotStateComponent implements OnInit, OnDestroy {
       this.playAnimation();
     } else if (status === GameStatus.Finished) {
       this.multiplierAnimation();
+    }
+  }
+
+  addGhostFontElement() {
+    this.ghostElement = document.createElement('p');
+    this.ghostElement.style.fontFamily = TextStyle.fontFamily;
+    this.ghostElement.style.fontSize = "0px";
+    this.ghostElement.style.visibility = "hidden";
+    this.ghostElement.innerHTML = '.';
+    document.body.appendChild(this.ghostElement);
+  };
+
+  removeGhostFontElement() {
+    if (this.ghostElement) {
+      document.body.removeChild(this.ghostElement);
+      this.ghostElement = null;
     }
   }
 
