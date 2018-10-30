@@ -89,7 +89,7 @@ export class SlotStateComponent implements OnInit, OnDestroy {
         this.spriteRolling.animationSpeed = 0.5;
         this.spriteRolling.x = 0;
         this.spriteRolling.y = 0;
-        this.spriteRolling.loop = true;
+        this.spriteRolling.loop = false;
         this.spriteRolling.onComplete = () => {
           this.spriteRolling.stop();
           this.spriteRolling.alpha = 0.0;
@@ -200,6 +200,13 @@ export class SlotStateComponent implements OnInit, OnDestroy {
       this.tweenTextCenterSlideOut.start();
       this.timer[0] = null;
     }, AnimationTiming.TextIn + AnimationTiming.TextDelay);
+
+    this.timer[1] = setTimeout(() => {
+      if (this.slotService.gameStatus === GameStatus.Play) {
+        this.playAnimation();
+      }
+      this.timer[1] = null;
+    }, AnimationTiming.TextIn + AnimationTiming.TextDelay * 2 + AnimationTiming.TextOut)
   }
 
   multiplierAnimation() {
