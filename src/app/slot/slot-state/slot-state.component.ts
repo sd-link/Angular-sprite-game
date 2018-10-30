@@ -107,7 +107,7 @@ export class SlotStateComponent implements OnInit, OnDestroy {
         }
         for (let i = 0; i < FallingDices; i++) {
           this.spriteDices[i] = new PIXI.extras.AnimatedSprite(frameDices);
-          this.spriteDices[i].y = -320;
+          this.spriteDices[i].y = -this.app.screen.height;
           this.spriteDices[i].anchor.set(0.5);
           this.tweenSpriteDices[i] = PIXI.tweenManager.createTween(this.spriteDices[i]);
           this.tweenSpriteDices[i].time = 100;
@@ -134,9 +134,6 @@ export class SlotStateComponent implements OnInit, OnDestroy {
         });
 
         this.textCenter = new PIXI.Text('PLAY!', style);
-        this.textCenter.x = this.app.screen.width / 2;
-        this.textCenter.y = this.app.screen.height / 2;
-        this.textCenter.anchor.set(0.5);
         this.app.stage.addChild(this.textCenter);
         this.textCenter.alpha = 0.0;
 
@@ -189,8 +186,12 @@ export class SlotStateComponent implements OnInit, OnDestroy {
   playAnimation() {
     this.initializeTimer();
     this.typeAnimation = 0;
+
+    this.textCenter.scale = {x: 1.0, y: 1.0};
+    this.textCenter.text = 'PLAY!';
     this.textCenter.style.fontSize = TextStyle.fontSizeLarge;
-    this.textCenter.text = 'PLAY!'
+    this.centerText();
+
     this.spriteRolling.gotoAndPlay(1);
     this.spriteRolling.alpha = 1.0;
     this.tweenTextCenterSlideIn.start();
@@ -205,8 +206,12 @@ export class SlotStateComponent implements OnInit, OnDestroy {
     const { multiplier, winItem } = this.slotService;
     this.initializeTimer();
     this.typeAnimation = 1;
-    this.textCenter.style.fontSize = TextStyle.fontSizeLarge;
+    
+    this.textCenter.scale = {x: 1.0, y: 1.0};
     this.textCenter.text = `X${multiplier < 10 ? '0' + multiplier : multiplier}`;
+    this.textCenter.style.fontSize = TextStyle.fontSizeLarge;
+    this.centerText();
+
     this.spriteRolling.alpha = 0.0;
     this.tweenTextCenterSlideIn.start();
 
@@ -230,7 +235,7 @@ export class SlotStateComponent implements OnInit, OnDestroy {
       this.timer[i] = setTimeout(() => {
         this.tweenSpriteDices[i]
           .from({y: - 30}) 
-          .to({y: 320 + 80})
+          .to({y: this.app.screen.width + 80})
           .time = (1 - scale) * AnimationTiming.DiceFallingDuration;
         this.tweenSpriteDices[i].start();
         this.timer[i] = null;
@@ -257,6 +262,8 @@ export class SlotStateComponent implements OnInit, OnDestroy {
     this.typeAnimation = 2;
     this.textCenter.style.fontSize = TextStyle.fontSizeSmall;
     this.textCenter.text = `${(0).toFixed(9)} BTC`;
+    this.centerText();
+
     this.spriteRolling.alpha = 0.0;
     this.tweenTextCenterSlideIn.start();
     
@@ -279,8 +286,12 @@ export class SlotStateComponent implements OnInit, OnDestroy {
   lastWinnigAnimation() {
     this.initializeTimer();
     this.typeAnimation = 3;
-    this.textCenter.style.fontSize = TextStyle.fontSizeSmall;
+    
+    this.textCenter.scale = {x: 1.0, y: 1.0};
     this.textCenter.text = `Last Winning \n ${this.slotService.lastWinning.toFixed(2)} BTC`;
+    this.textCenter.style.fontSize = TextStyle.fontSizeSmall;
+    this.centerText();
+
     this.spriteRolling.alpha = 0.0;
     this.tweenTextCenterSlideIn.start();
     
@@ -293,12 +304,17 @@ export class SlotStateComponent implements OnInit, OnDestroy {
   failAnimation() {
     this.initializeTimer();
     this.typeAnimation = 0;
-    this.textCenter.style.fontSize = TextStyle.fontSizeMedium;
+
+    this.textCenter.scale = {x: 1.0, y: 1.0};
     this.textCenter.text = 'Try again!'
+    this.textCenter.style.fontSize = TextStyle.fontSizeMedium;
+    this.centerText();
+   
     this.tweenTextCenterZoomIn.start();
 
     this.timer[0] = setTimeout(() => {
       this.tweenTextCenterZoomOut.start();
+      this.textCenter.scale = {x: 1.0, y: 1.0}
       this.timer[0] = null;
     }, AnimationTiming.TextIn + AnimationTiming.TextDelay);
   }
@@ -322,6 +338,12 @@ export class SlotStateComponent implements OnInit, OnDestroy {
     } else if (status === GameStatus.Fail) {
       this.failAnimation();
     } 
+  }
+
+  centerText() {
+    this.textCenter.x = this.app.screen.width / 2;
+    this.textCenter.y = this.app.screen.height / 2;
+    this.textCenter.anchor.set(0.5);
   }
 
   addGhostFontElement() {
