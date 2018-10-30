@@ -198,6 +198,7 @@ export class SlotStateComponent implements OnInit, OnDestroy {
     
     this.timer[0] = setTimeout(() => {
       this.tweenTextCenterSlideOut.start();
+      clearTimeout(this.timer[0]);
       this.timer[0] = null;
     }, AnimationTiming.TextIn + AnimationTiming.TextDelay);
 
@@ -205,6 +206,7 @@ export class SlotStateComponent implements OnInit, OnDestroy {
       if (this.slotService.gameStatus === GameStatus.Play) {
         this.playAnimation();
       }
+      clearTimeout(this.timer[1]);
       this.timer[1] = null;
     }, AnimationTiming.TextIn + AnimationTiming.TextDelay * 2 + AnimationTiming.TextOut)
   }
@@ -225,9 +227,7 @@ export class SlotStateComponent implements OnInit, OnDestroy {
     
     let diceIndex = 0;
     for (let i = 0; i < DiceNames.length; i ++) {
-      
       if (DiceNames[i] === winItem) {
-        
         diceIndex = i; 
         break;
       }
@@ -245,6 +245,7 @@ export class SlotStateComponent implements OnInit, OnDestroy {
           .to({y: this.app.screen.width + 80})
           .time = (1 - scale) * AnimationTiming.DiceFallingDuration;
         this.tweenSpriteDices[i].start();
+        clearTimeout(this.timer[i]);
         this.timer[i] = null;
         
       }, i * AnimationTiming.DiceFallingInterval);
@@ -258,6 +259,7 @@ export class SlotStateComponent implements OnInit, OnDestroy {
 
     this.timer[FallingDices + 1] = setTimeout(() => {
       this.scoreAnimation();
+      clearTimeout(this.timer[FallingDices + 1]);
       this.timer[FallingDices + 1] = null;
     }, FallingDices * AnimationTiming.DiceFallingInterval + AnimationTiming.TextOut);
 
@@ -276,16 +278,19 @@ export class SlotStateComponent implements OnInit, OnDestroy {
     
     this.timer[0] = setTimeout(() => {
       this.tweenTextCenterChange.start();
+      clearTimeout(this.timer[0]);
       this.timer[0] = null;
     }, AnimationTiming.TextIn + AnimationTiming.TextDelay);
 
     this.timer[1] = setTimeout(() => {
       this.tweenTextCenterSlideOut.start();
+      clearTimeout(this.timer[1]);
       this.timer[1] = null;
     }, AnimationTiming.TextIn + AnimationTiming.TextCounting + AnimationTiming.TextDelay * 2);
 
     this.timer[2] = setTimeout(() => {
       this.lastWinnigAnimation();
+      clearTimeout(this.timer[2]);
       this.timer[2] = null;
     }, AnimationTiming.TextIn + AnimationTiming.TextCounting + AnimationTiming.TextDelay * 2 + AnimationTiming.TextOut);
   }
@@ -304,6 +309,7 @@ export class SlotStateComponent implements OnInit, OnDestroy {
     
     this.timer[0] = setTimeout(() => {
       this.tweenTextCenterSlideOut.start();
+      clearTimeout(this.timer[0]);
       this.timer[0] = null;
     }, AnimationTiming.TextIn + AnimationTiming.TextDelay);
   }
@@ -322,6 +328,7 @@ export class SlotStateComponent implements OnInit, OnDestroy {
     this.timer[0] = setTimeout(() => {
       this.tweenTextCenterZoomOut.start();
       this.textCenter.scale = {x: 1.0, y: 1.0}
+      clearTimeout(this.timer[0]);
       this.timer[0] = null;
     }, AnimationTiming.TextIn + AnimationTiming.TextDelay);
   }
@@ -341,7 +348,11 @@ export class SlotStateComponent implements OnInit, OnDestroy {
     if (status === GameStatus.Play) {
       this.playAnimation();
     } else if (status === GameStatus.Success) {
-      this.multiplierAnimation();
+      this.timer[FallingDices + 2] = setTimeout(() => {
+        clearTimeout(this.timer[FallingDices + 2]);
+        this.timer[FallingDices + 2] = null;
+        this.multiplierAnimation();
+      }, AnimationTiming.TextOut + AnimationTiming.TextDelay);
     } else if (status === GameStatus.Fail) {
       this.failAnimation();
     } 
