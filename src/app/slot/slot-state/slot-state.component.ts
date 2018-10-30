@@ -45,6 +45,15 @@ export class SlotStateComponent implements OnInit, OnDestroy {
       this.subscription = null;
     }
     this.removeGhostFontElement();
+    this.initializeTimer();
+    this.tweenTextCenterChange = null;
+    this.tweenTextCenterOut = null;
+    this.tweenTextCenterIn = null;
+    this.textCenter = null;
+    this.imgBackground = null;
+    this.spriteRolling = null;
+    this.spriteDices = null;
+    this.tweenSpriteDices = null;
   }
 
   ngOnInit() {
