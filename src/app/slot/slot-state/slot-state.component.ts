@@ -346,7 +346,11 @@ export class SlotStateComponent implements OnInit, OnDestroy {
 
   gameStatusChange(status) {
     if (status === GameStatus.Play) {
-      this.playAnimation();
+      this.timer[FallingDices + 2] = setTimeout(() => {
+        clearTimeout(this.timer[FallingDices + 2]);
+        this.timer[FallingDices + 2] = null;
+        this.playAnimation();
+      }, AnimationTiming.TextOut + AnimationTiming.TextDelay);
     } else if (status === GameStatus.Success) {
       this.timer[FallingDices + 2] = setTimeout(() => {
         clearTimeout(this.timer[FallingDices + 2]);
@@ -354,7 +358,11 @@ export class SlotStateComponent implements OnInit, OnDestroy {
         this.multiplierAnimation();
       }, AnimationTiming.TextOut + AnimationTiming.TextDelay);
     } else if (status === GameStatus.Fail) {
-      this.failAnimation();
+      this.timer[FallingDices + 2] = setTimeout(() => {
+        clearTimeout(this.timer[FallingDices + 2]);
+        this.timer[FallingDices + 2] = null;
+        this.failAnimation();
+      }, AnimationTiming.TextOut + AnimationTiming.TextDelay);
     } 
   }
 
