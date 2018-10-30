@@ -1,5 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
-
+import { DiceNames, GameStatus } from './../slot/slot-state/config'
 
 @Injectable({
   providedIn: 'root'
@@ -18,9 +18,10 @@ export class SlotService {
 
   setGameStatus(status) {
     this.gameStatus = status;
-    if (this.gameStatus === 'finished') {
+    if (this.gameStatus === GameStatus.Finished) {
       this.multiplier = Math.floor(Math.random() * 10);
-      this.winItem = 'bitcoin';
+      const diceIndex = Math.floor(DiceNames.length * Math.random());
+      this.winItem = DiceNames[diceIndex];
       this.score = Math.random();
       this.lastWinning = this.score;
     }

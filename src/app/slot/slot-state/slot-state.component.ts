@@ -1,6 +1,6 @@
 import { Component, OnInit, ElementRef, ViewChild, OnDestroy } from '@angular/core';
 import { SlotService } from './../slot.service';
-import { DiceNames, FallingDices, AnimationTiming } from './config';
+import { DiceNames, FallingDices, AnimationTiming, GameStatus } from './config';
 
 declare var PIXI: any;
 declare var tweenManager: any;
@@ -272,15 +272,19 @@ export class SlotStateComponent implements OnInit, OnDestroy {
   }
 
   gameStatusChange(status) {
-    if (status === 'play') {
+    if (status === GameStatus.Play) {
       this.playAnimation();
-    } else if (status === 'finished') {
+    } else if (status === GameStatus.Finished) {
       this.multiplierAnimation();
     }
   }
 
-  setPlayStatus(status) {
-    this.slotService.setGameStatus(status);
+  play() {
+    this.slotService.setGameStatus(GameStatus.Play);
+  }
+
+  finished() {
+    this.slotService.setGameStatus(GameStatus.Finished);
   }
 
 
