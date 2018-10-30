@@ -205,12 +205,12 @@ export class SlotStateComponent implements OnInit, OnDestroy {
     }, AnimationTiming.TextIn + AnimationTiming.TextDelay);
 
     this.timer[1] = setTimeout(() => {
+      clearTimeout(this.timer[1]);
+      this.timer[1] = null;      
       if (this.slotService.gameStatus === GameStatus.Play) {
         this.playAnimation();
       }
-      clearTimeout(this.timer[1]);
-      this.timer[1] = null;
-    }, AnimationTiming.TextIn + AnimationTiming.TextDelay * 2 + AnimationTiming.TextOut)
+    }, AnimationTiming.TextIn + AnimationTiming.TextDelay * 3 + AnimationTiming.TextOut)
   }
 
   multiplierAnimation() {
