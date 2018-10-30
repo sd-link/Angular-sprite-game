@@ -1,5 +1,6 @@
 import { Component, OnInit, ElementRef, ViewChild, OnDestroy } from '@angular/core';
-import { SlotService } from './../slot.service'
+import { SlotService } from './../slot.service';
+import { DiceNames, FallingDices, AnimationTiming } from './config';
 
 declare var PIXI: any;
 declare var tweenManager: any;
@@ -30,9 +31,6 @@ export class SlotStateComponent implements OnInit, OnDestroy {
   typeAnimation: number; 
   score: number;
   
-  dicesNameArray = ['bear', 'bitcoin', 'penguin', 'mountain', 'dice1', 'dice2', 'dice3', 'dice4', 'dice5', 'dice6'];
-  fallingDices: number = 4;
-
   @ViewChild('wrapper') wrapper: ElementRef;
 
   constructor(public slotService: SlotService) {
@@ -86,11 +84,11 @@ export class SlotStateComponent implements OnInit, OnDestroy {
         let frameDices = [];
         this.spriteDices = [];
         this.tweenSpriteDices = [];
-        for (let i = 0; i < this.dicesNameArray.length; i++) {
-          const diceName = this.dicesNameArray[i];
+        for (let i = 0; i < DiceNames.length; i++) {
+          const diceName = DiceNames[i];
           frameDices.push(PIXI.Texture.fromFrame(diceName));
         }
-        for (let i = 0; i < this.fallingDices; i++) {
+        for (let i = 0; i < FallingDices; i++) {
           this.spriteDices[i] = new PIXI.extras.AnimatedSprite(frameDices);
           this.spriteDices[i].y = -320;
           this.spriteDices[i].anchor.set(0.5);
@@ -127,19 +125,19 @@ export class SlotStateComponent implements OnInit, OnDestroy {
 
         /* tween-text-center */
         this.tweenTextCenterIn = PIXI.tweenManager.createTween(this.textCenter);
-        this.tweenTextCenterIn.time = 400;
+        this.tweenTextCenterIn.time = AnimationTiming.TextIn;
         this.tweenTextCenterIn
           .from({ y: this.app.screen.height / 2 + 50, alpha: 0.0 })
           .to({ y: this.app.screen.height / 2, alpha: 1.0 })
         
         this.tweenTextCenterOut = PIXI.tweenManager.createTween(this.textCenter);
-        this.tweenTextCenterOut.time = 400;
+        this.tweenTextCenterOut.time = AnimationTiming.TextOut;
         this.tweenTextCenterOut
           .from({ y: this.app.screen.height / 2, alpha: 1.0 })
           .to({ y: this.app.screen.height / 2 - 50, alpha: 0.0 })
 
         this.tweenTextCenterChange = PIXI.tweenManager.createTween(this.textCenter);
-        this.tweenTextCenterChange.time = 3000;
+        this.tweenTextCenterChange.time = AnimationTiming.TextCounting;
         this.tweenTextCenterChange.on('update', (progress, estimateTime) => { 
           switch(this.typeAnimation) {
             case 2:
@@ -171,7 +169,7 @@ export class SlotStateComponent implements OnInit, OnDestroy {
     this.timer[0] = setTimeout(() => {
       this.tweenTextCenterOut.start();
       this.timer[0] = null;
-    }, 1100);
+    }, AnimationTiming.TextIn + AnimationTiming.TextDelay);
   }
 
   multiplierAnimation() {
@@ -183,19 +181,18 @@ export class SlotStateComponent implements OnInit, OnDestroy {
     this.spriteRolling.alpha = 0.0;
     this.tweenTextCenterIn.start();
 
-    const interval = 500;
     
     let diceIndex = 0;
-    for (let i = 0; i < this.dicesNameArray.length; i ++) {
+    for (let i = 0; i < DiceNames.length; i ++) {
       
-      if (this.dicesNameArray[i] === winItem) {
+      if (DiceNames[i] === winItem) {
         
         diceIndex = i; 
         break;
       }
     }
 
-    for (let i = 0; i < this.fallingDices; i ++) {
+    for (let i = 0; i < FallingDices; i ++) {
       this.spriteDices[i].gotoAndStop(diceIndex);
       const scale = Math.random() / 3.0 + 0.4;
       this.spriteDices[i].scale = {x: scale, y: scale};
@@ -205,23 +202,23 @@ export class SlotStateComponent implements OnInit, OnDestroy {
         this.tweenSpriteDices[i]
           .from({y: - 30}) 
           .to({y: 320 + 80})
-          .time = (1 - scale) * 2000;
+          .time = (1 - scale) * AnimationTiming.DiceFallingDuration;
         this.tweenSpriteDices[i].start();
         this.timer[i] = null;
         
-      }, i * interval);
+      }, i * AnimationTiming.DiceFallingInterval);
 
     }
 
-    this.timer[this.fallingDices] = setTimeout(() => {
+    this.timer[FallingDices] = setTimeout(() => {
       this.tweenTextCenterOut.start();
-      this.timer[this.fallingDices] = null;
-    }, this.fallingDices * interval);
+      this.timer[FallingDices] = null;
+    }, FallingDices * AnimationTiming.DiceFallingInterval);
 
-    this.timer[this.fallingDices + 1] = setTimeout(() => {
+    this.timer[FallingDices + 1] = setTimeout(() => {
       this.scoreAnimation();
-      this.timer[this.fallingDices + 1] = null;
-    }, this.fallingDices * interval + 500);
+      this.timer[FallingDices + 1] = null;
+    }, FallingDices * AnimationTiming.DiceFallingInterval + AnimationTiming.TextOut);
 
   }
 
@@ -237,17 +234,17 @@ export class SlotStateComponent implements OnInit, OnDestroy {
     this.timer[0] = setTimeout(() => {
       this.tweenTextCenterChange.start();
       this.timer[0] = null;
-    }, 600);
+    }, AnimationTiming.TextIn + AnimationTiming.TextDelay);
 
     this.timer[1] = setTimeout(() => {
       this.tweenTextCenterOut.start();
       this.timer[1] = null;
-    }, 4500);
+    }, AnimationTiming.TextIn + AnimationTiming.TextCounting + AnimationTiming.TextDelay * 2);
 
     this.timer[2] = setTimeout(() => {
       this.lastWinnigAnimation();
       this.timer[2] = null;
-    }, 5000);
+    }, AnimationTiming.TextIn + AnimationTiming.TextCounting + AnimationTiming.TextDelay * 2 + AnimationTiming.TextOut);
   }
 
   lastWinnigAnimation() {
@@ -261,7 +258,7 @@ export class SlotStateComponent implements OnInit, OnDestroy {
     this.timer[0] = setTimeout(() => {
       this.tweenTextCenterOut.start();
       this.timer[0] = null;
-    }, 1100);
+    }, AnimationTiming.TextIn + AnimationTiming.TextDelay);
   }
   
   initializeTimer() {
