@@ -1,4 +1,7 @@
-export const DiceNames = ['bear', 'bitcoin', 'penguin', 'mountain', 'dice1', 'dice2', 'dice3', 'dice4', 'dice5', 'dice6'];
+export const DiceNames = 
+  [ 'mintleaf', 'bitcoin', 'bear', 'penguin', 'mountain', 
+    'mintdice1', 'mintdice2', 'mintdice3', 'mintdice4', 'mintdice5', 'mintdice6', 
+    'dice1', 'dice2', 'dice3', 'dice4', 'dice5', 'dice6'];
 
 export const FallingDices = 4;
 
