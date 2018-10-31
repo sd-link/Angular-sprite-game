@@ -3,8 +3,7 @@ import { SlotService } from './../slot.service';
 import { DiceNames, FallingDices, AnimationTiming, GameStatus, TextStyle, GameText } from './config';
 
 declare var PIXI: any;
-// declare var tweenManager: any;
-
+var slotPt;
 @Component({
   selector: 'app-slot-state',
   templateUrl: './slot-state.component.html',
@@ -40,6 +39,7 @@ export class SlotStateComponent implements OnInit, OnDestroy {
   constructor(public slotService: SlotService) {
     this.addGhostFontElement();
     this.subscription = this.slotService.gameStatusChanged.subscribe(status => this.gameStatusChange(status));
+    slotPt = this;
   }
   ngOnDestroy() {
     if (this.subscription) {
@@ -48,6 +48,8 @@ export class SlotStateComponent implements OnInit, OnDestroy {
     }
     this.removeGhostFontElement();
     this.initializeTimer();
+    this.app.ticker.remove(this.updateTicker);
+    this.tweenTextCenterChange.off('update', this.onTweenTextCenterChange);
     this.tweenTextCenterChange = null;
     this.tweenTextCenterSlideOut = null;
     this.tweenTextCenterSlideIn = null;
@@ -58,6 +60,7 @@ export class SlotStateComponent implements OnInit, OnDestroy {
     this.spriteRolling = null;
     this.spriteDices = null;
     this.tweenSpriteDices = null;
+    PIXI.loader.reset();
   }
 
   ngOnInit() {
@@ -92,8 +95,10 @@ export class SlotStateComponent implements OnInit, OnDestroy {
         this.spriteRolling.anchor.set(0.5);
         this.spriteRolling.loop = false;
         this.spriteRolling.onComplete = () => {
-          this.spriteRolling.stop();
-          this.spriteRolling.alpha = 0.0;
+          if (this.spriteRolling) {
+            this.spriteRolling.stop();
+            this.spriteRolling.alpha = 0.0;
+          }
         };
 
       
@@ -135,7 +140,7 @@ export class SlotStateComponent implements OnInit, OnDestroy {
             dropShadowDistance: 0
         });
 
-        this.textCenter = new PIXI.Text('PLAY!', style);
+        this.textCenter = new PIXI.Text('!', style);
         this.app.stage.addChild(this.textCenter);
         this.textCenter.alpha = 0.0;
 
@@ -166,26 +171,29 @@ export class SlotStateComponent implements OnInit, OnDestroy {
 
         this.tweenTextCenterChange = PIXI.tweenManager.createTween(this.textCenter);
         this.tweenTextCenterChange.time = AnimationTiming.TextCounting;
-        this.tweenTextCenterChange.on('update', (progress, estimateTime) => { 
-          switch(this.typeAnimation) {
-            case 2:
-              const txt = `${(this.score * progress).toFixed(9)} BTC`;
-              this.textCenter.text = txt;
-              break;
-            default:
-          }
-        });
-
+        this.tweenTextCenterChange.on('update', this.onTweenTextCenterChange);
+        
         // Animate main things
-        this.app.ticker.add(() => {
-          PIXI.tweenManager.update();
-          this.backgroundAlphaStep = (this.imgBackground.alpha + this.backgroundAlphaStep > 1.0 || this.imgBackground.alpha + this.backgroundAlphaStep < 0.55) ? -this.backgroundAlphaStep : this.backgroundAlphaStep;
-          this.imgBackground.alpha += this.backgroundAlphaStep;
-          if (this.slotService.gameStatus === GameStatus.Play && this.spriteRolling.currentFrame >= 27) {
-            this.spriteRolling.gotoAndPlay(22);
-          }
-        });
+        this.app.ticker.add(this.updateTicker);
       });
+  }
+
+  updateTicker() {
+    PIXI.tweenManager.update();
+    slotPt.backgroundAlphaStep = (slotPt.imgBackground.alpha + slotPt.backgroundAlphaStep > 1.0 || slotPt.imgBackground.alpha + slotPt.backgroundAlphaStep < 0.55) ? -slotPt.backgroundAlphaStep : slotPt.backgroundAlphaStep;
+    slotPt.imgBackground.alpha += this.backgroundAlphaStep;
+    if (slotPt.slotService.gameStatus === GameStatus.Play && slotPt.spriteRolling.currentFrame >= 27) {
+      slotPt.spriteRolling.gotoAndPlay(23);
+    }    
+  }
+
+  onTweenTextCenterChange(progress, estimateTime){ 
+    switch(slotPt.typeAnimation) {
+      case 2:
+        slotPt.textCenter.text = `${(slotPt.score * progress).toFixed(9)} ${GameText.BTC}`;
+        break;
+      default:
+    }
   }
 
   playAnimation() {
@@ -214,13 +222,10 @@ export class SlotStateComponent implements OnInit, OnDestroy {
 
     this.tweenTextCenterSlideIn.start();
 
-    
-    let diceIndex = 0;
-    for (let i = 0; i < DiceNames.length; i ++) {
-      if (DiceNames[i] === winItem) {
-        diceIndex = i; 
-        break;
-      }
+   
+    let diceIndex = DiceNames.indexOf(winItem);
+    if (diceIndex === -1) {
+      diceIndex = 0;
     }
 
     for (let i = 0; i < FallingDices; i ++) {
