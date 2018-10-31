@@ -49,17 +49,32 @@ export class SlotStateComponent implements OnInit, OnDestroy {
     this.removeGhostFontElement();
     this.initializeTimer();
     this.app.ticker.remove(this.updateTicker);
+    
     this.tweenTextCenterChange.off('update', this.onTweenTextCenterChange);
+    this.tweenTextCenterChange.clear();
     this.tweenTextCenterChange = null;
+    this.tweenTextCenterSlideOut.clear();
     this.tweenTextCenterSlideOut = null;
+    this.tweenTextCenterSlideIn.clear();
     this.tweenTextCenterSlideIn = null;
+    this.tweenTextCenterZoomOut.clear();
     this.tweenTextCenterZoomOut = null;
+    this.tweenTextCenterZoomIn.clear();
     this.tweenTextCenterZoomIn = null;
+    
+    this.textCenter.destroy();
     this.textCenter = null;
+    this.imgBackground.destroy();
     this.imgBackground = null;
+    this.spriteRolling.destroy();
     this.spriteRolling = null;
-    this.spriteDices = null;
-    this.tweenSpriteDices = null;
+    
+    for (let i = 0; i < this.spriteDices.length; i ++) {
+      this.tweenSpriteDices[i].clear();
+      this.tweenSpriteDices[i] = null;
+      this.spriteDices[i].destroy();
+      this.spriteDices[i] = null;
+    }
     PIXI.loader.reset();
   }
 
@@ -222,14 +237,8 @@ export class SlotStateComponent implements OnInit, OnDestroy {
 
     this.tweenTextCenterSlideIn.start();
 
-   
-    let diceIndex = DiceNames.indexOf(winItem);
-    if (diceIndex === -1) {
-      diceIndex = 0;
-    }
-
     for (let i = 0; i < FallingDices; i ++) {
-      this.spriteDices[i].gotoAndStop(diceIndex);
+      this.spriteDices[i].gotoAndStop(winItem);
       const scale = Math.random() / 3.0 + 0.4;
       this.spriteDices[i].scale = {x: scale, y: scale};
       this.spriteDices[i].x = 30 + Math.random() * 260;
