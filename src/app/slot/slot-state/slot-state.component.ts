@@ -1,6 +1,6 @@
 import { Component, OnInit, ElementRef, ViewChild, OnDestroy } from '@angular/core';
 import { SlotService } from './../slot.service';
-import { DiceNames, FallingDices, AnimationTiming, GameStatus, TextStyle } from './config';
+import { DiceNames, FallingDices, AnimationTiming, GameStatus, TextStyle, GameText } from './config';
 
 declare var PIXI: any;
 // declare var tweenManager: any;
@@ -193,7 +193,7 @@ export class SlotStateComponent implements OnInit, OnDestroy {
     this.typeAnimation = 0;
 
     this.textCenter.scale = {x: 1.0, y: 1.0};
-    this.textCenter.text = 'PLAY!';
+    this.textCenter.text = GameText.Play;
     this.textCenter.style.fontSize = TextStyle.fontSizeLarge;
     this.centerText();
 
@@ -260,7 +260,7 @@ export class SlotStateComponent implements OnInit, OnDestroy {
     this.score = this.slotService.score;
     this.typeAnimation = 2;
     this.textCenter.style.fontSize = TextStyle.fontSizeSmall;
-    this.textCenter.text = `${(0).toFixed(9)} BTC`;
+    this.textCenter.text = `${(0).toFixed(9)} ${GameText.BTC}`;
     this.centerText();
 
     this.spriteRolling.alpha = 0.0;
@@ -290,7 +290,7 @@ export class SlotStateComponent implements OnInit, OnDestroy {
     this.typeAnimation = 3;
     
     this.textCenter.scale = {x: 1.0, y: 1.0};
-    this.textCenter.text = `Last Winning \n ${this.slotService.lastWinning.toFixed(2)} BTC`;
+    this.textCenter.text = `${GameText.LastWinning} \n ${this.slotService.lastWinning.toFixed(2)} ${GameText.BTC}`;
     this.textCenter.style.fontSize = TextStyle.fontSizeSmall;
     this.centerText();
 
@@ -309,7 +309,7 @@ export class SlotStateComponent implements OnInit, OnDestroy {
     this.typeAnimation = 0;
 
     this.textCenter.scale = {x: 1.0, y: 1.0};
-    this.textCenter.text = 'Try again!'
+    this.textCenter.text = GameText.TryAgain;
     this.textCenter.style.fontSize = TextStyle.fontSizeMedium;
     this.centerText();
    
@@ -336,9 +336,9 @@ export class SlotStateComponent implements OnInit, OnDestroy {
 
   disapearPlay() {
     this.initializeTimer();
-    this.tweenTextCenterSlideOut.start();
-    clearTimeout(this.timer[0]);
-    this.timer[0] = null;
+    if (this.textCenter.text === GameText.Play) {
+      this.tweenTextCenterSlideOut.start();
+    }
   }
 
   gameStatusChange(status) {

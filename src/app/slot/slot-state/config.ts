@@ -24,6 +24,13 @@ export enum GameStatus {
   Play = 'PLAY'
 }
 
+export enum GameText {
+  Play = 'PLAY!',
+  TryAgain = 'Try again!',
+  BTC = 'BTC',
+  LastWinning = 'Last winning'
+}
+
  
 
  
