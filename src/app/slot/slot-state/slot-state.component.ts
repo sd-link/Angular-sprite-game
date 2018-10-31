@@ -181,6 +181,9 @@ export class SlotStateComponent implements OnInit, OnDestroy {
           PIXI.tweenManager.update();
           this.backgroundAlphaStep = (this.imgBackground.alpha + this.backgroundAlphaStep > 1.0 || this.imgBackground.alpha + this.backgroundAlphaStep < 0.55) ? -this.backgroundAlphaStep : this.backgroundAlphaStep;
           this.imgBackground.alpha += this.backgroundAlphaStep;
+          if (this.slotService.gameStatus === GameStatus.Play && this.spriteRolling.currentFrame >= 27) {
+            this.spriteRolling.gotoAndPlay(22);
+          }
         });
       });
   }
@@ -197,20 +200,6 @@ export class SlotStateComponent implements OnInit, OnDestroy {
     this.spriteRolling.gotoAndPlay(1);
     this.spriteRolling.alpha = 1.0;
     this.tweenTextCenterSlideIn.start();
-    
-    this.timer[0] = setTimeout(() => {
-      this.tweenTextCenterSlideOut.start();
-      clearTimeout(this.timer[0]);
-      this.timer[0] = null;
-    }, AnimationTiming.TextIn + AnimationTiming.TextDelay);
-
-    this.timer[1] = setTimeout(() => {
-      clearTimeout(this.timer[1]);
-      this.timer[1] = null;      
-      if (this.slotService.gameStatus === GameStatus.Play) {
-        this.playAnimation();
-      }
-    }, AnimationTiming.TextIn + AnimationTiming.TextDelay * 3 + AnimationTiming.TextOut)
   }
 
   multiplierAnimation() {
@@ -223,7 +212,6 @@ export class SlotStateComponent implements OnInit, OnDestroy {
     this.textCenter.style.fontSize = TextStyle.fontSizeLarge;
     this.centerText();
 
-    this.spriteRolling.alpha = 0.0;
     this.tweenTextCenterSlideIn.start();
 
     
@@ -346,6 +334,13 @@ export class SlotStateComponent implements OnInit, OnDestroy {
 
   }
 
+  disapearPlay() {
+    this.initializeTimer();
+    this.tweenTextCenterSlideOut.start();
+    clearTimeout(this.timer[0]);
+    this.timer[0] = null;
+  }
+
   gameStatusChange(status) {
     if (status === GameStatus.Play) {
       this.timer[FallingDices + 2] = setTimeout(() => {
@@ -354,12 +349,14 @@ export class SlotStateComponent implements OnInit, OnDestroy {
         this.playAnimation();
       }, AnimationTiming.TextOut + AnimationTiming.TextDelay);
     } else if (status === GameStatus.Success) {
+      this.disapearPlay();
       this.timer[FallingDices + 2] = setTimeout(() => {
         clearTimeout(this.timer[FallingDices + 2]);
         this.timer[FallingDices + 2] = null;
         this.multiplierAnimation();
       }, AnimationTiming.TextOut + AnimationTiming.TextDelay);
     } else if (status === GameStatus.Fail) {
+      this.disapearPlay();
       this.timer[FallingDices + 2] = setTimeout(() => {
         clearTimeout(this.timer[FallingDices + 2]);
         this.timer[FallingDices + 2] = null;
