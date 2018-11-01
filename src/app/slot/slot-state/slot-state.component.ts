@@ -3,7 +3,6 @@ import { SlotService } from './../slot.service';
 import { DiceNames, FallingDices, AnimationTiming, GameStatus, TextStyle, GameText } from './config';
 
 declare var PIXI: any;
-var slotPt;
 @Component({
   selector: 'app-slot-state',
   templateUrl: './slot-state.component.html',
@@ -39,7 +38,6 @@ export class SlotStateComponent implements OnInit, OnDestroy {
   constructor(public slotService: SlotService) {
     this.addGhostFontElement();
     this.subscription = this.slotService.gameStatusChanged.subscribe(status => this.gameStatusChange(status));
-    slotPt = this;
   }
   ngOnDestroy() {
     if (this.subscription) {
@@ -193,19 +191,19 @@ export class SlotStateComponent implements OnInit, OnDestroy {
       });
   }
 
-  updateTicker() {
+  updateTicker = () => {
     PIXI.tweenManager.update();
-    slotPt.backgroundAlphaStep = (slotPt.imgBackground.alpha + slotPt.backgroundAlphaStep > 1.0 || slotPt.imgBackground.alpha + slotPt.backgroundAlphaStep < 0.55) ? -slotPt.backgroundAlphaStep : slotPt.backgroundAlphaStep;
-    slotPt.imgBackground.alpha += this.backgroundAlphaStep;
-    if (slotPt.slotService.gameStatus === GameStatus.Play && slotPt.spriteRolling.currentFrame >= 27) {
-      slotPt.spriteRolling.gotoAndPlay(23);
+    this.backgroundAlphaStep = (this.imgBackground.alpha + this.backgroundAlphaStep > 1.0 || this.imgBackground.alpha + this.backgroundAlphaStep < 0.55) ? -this.backgroundAlphaStep : this.backgroundAlphaStep;
+    this.imgBackground.alpha += this.backgroundAlphaStep;
+    if (this.slotService.gameStatus === GameStatus.Play && this.spriteRolling.currentFrame >= 27) {
+      this.spriteRolling.gotoAndPlay(23);
     }    
   }
 
-  onTweenTextCenterChange(progress, estimateTime){ 
-    switch(slotPt.typeAnimation) {
+  onTweenTextCenterChange = (progress, estimateTime) => { 
+    switch(this.typeAnimation) {
       case 2:
-        slotPt.textCenter.text = `${(slotPt.score * progress).toFixed(9)} ${GameText.BTC}`;
+      this.textCenter.text = `${(this.score * progress).toFixed(9)} ${GameText.BTC}`;
         break;
       default:
     }
